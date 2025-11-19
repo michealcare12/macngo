@@ -1,2 +1,180 @@
 # macngo
 Site officiel MacNGo – Chauffeur Privé Premium
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>MacNGo – Chauffeur Privé Premium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #0b0b0b;
+        color: #fff;
+        margin: 0;
+    }
+
+    /* HEADER */
+    header {
+        background: #000;
+        padding: 35px 0 20px;
+        text-align: center;
+        border-bottom: 2px solid gold;
+    }
+
+    header img {
+        width: 260px;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+    }
+
+    /* MAIN */
+    .container {
+        width: 90%;
+        max-width: 620px;
+        margin: 25px auto;
+        background: #141414;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+    }
+
+    h2 {
+        text-align: center;
+        color: gold;
+        margin-top: 10px;
+        font-size: 24px;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border-radius: 6px;
+        border: none;
+        background: #222;
+        color: white;
+        font-size: 16px;
+    }
+
+    input:focus, textarea:focus {
+        outline: 2px solid gold;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 15px;
+        background: gold;
+        color: black;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* CALL BUTTON */
+    .call-btn {
+        background: #00ff62;
+        color: #000;
+        margin-top: 10px;
+        font-size: 20px;
+    }
+
+    /* PRICE RESULT */
+    .price-box {
+        background: #000;
+        border: 1px solid gold;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 10px;
+        display: none;
+        font-size: 18px;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <img src="macngo-logo.svg" alt="Logo MacNGo">
+</header>
+
+<div class="container">
+
+    <h2>Réservation Chauffeur Privé Premium</h2>
+
+    <form id="bookingForm">
+        <input type="text" id="client" placeholder="Nom complet" required>
+        <input type="text" id="phone" placeholder="Numéro de téléphone" required>
+        <input type="text" id="pickup" placeholder="Adresse de départ" required>
+        <input type="text" id="dropoff" placeholder="Adresse de destination" required>
+        <input type="number" id="distance" placeholder="Distance estimée en km" required>
+        <input type="number" id="waiting" placeholder="Minutes d’attente (si applicable)">
+        <input type="datetime-local" id="datetime" required>
+        <textarea id="notes" placeholder="Informations supplémentaires (optionnel)"></textarea>
+
+        <button type="button" onclick="calculatePrice()">Calculer le prix</button>
+
+        <div id="priceBox" class="price-box"></div>
+
+        <button type="button" onclick="sendWhatsApp()">Envoyer sur WhatsApp</button>
+
+        <a href="tel:+33753617563">
+            <button type="button" class="call-btn">📞 Appeler maintenant</button>
+        </a>
+    </form>
+</div>
+
+<script>
+// Tarifs premium MacNGo
+const baseFare = 5;        // prise en charge
+const pricePerKm = 1.70;   // prix par km
+const waitPerMin = 0.30;   // attente
+const minFare = 20;        // tarif minimum
+
+function calculatePrice() {
+    const distance = parseFloat(document.getElementById("distance").value);
+    const waiting = parseFloat(document.getElementById("waiting").value) || 0;
+
+    let price = baseFare + (distance * pricePerKm) + (waiting * waitPerMin);
+
+    if (price < minFare) price = minFare;
+
+    document.getElementById("priceBox").style.display = "block";
+    document.getElementById("priceBox").innerHTML =
+        "<b>Prix estimé :</b> " + price.toFixed(2) + " € (Premium)";
+}
+
+function sendWhatsApp() {
+    const client = document.getElementById("client").value;
+    const phone = document.getElementById("phone").value;
+    const pickup = document.getElementById("pickup").value;
+    const dropoff = document.getElementById("dropoff").value;
+    const distance = document.getElementById("distance").value;
+    const waiting = document.getElementById("waiting").value;
+    const datetime = document.getElementById("datetime").value;
+    const notes = document.getElementById("notes").value;
+
+    const message =
+        "🚖 *Réservation – MacNGo Premium* %0A%0A" +
+        "*Client :* " + client + "%0A" +
+        "*Téléphone :* " + phone + "%0A" +
+        "*Départ :* " + pickup + "%0A" +
+        "*Destination :* " + dropoff + "%0A" +
+        "*Distance :* " + distance + " km%0A" +
+        "*Attente :* " + waiting + " min%0A" +
+        "*Date/Heure :* " + datetime + "%0A" +
+        "*Infos :* " + notes + "%0A%0A" +
+        "Merci d’avoir choisi *MacNGo Premium* ✨";
+
+    const whatsappNumber = "33753617563";
+
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
+}
+</script>
+
+</body>
+</html>
